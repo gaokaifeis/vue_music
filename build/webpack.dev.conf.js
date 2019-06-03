@@ -10,6 +10,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
+const express = require('express')
+const axios = require('axios')
+const app = express()
+var apiRoutes = express.Router()
+app.use('/api', apiRoutes)
+
+
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
@@ -22,6 +29,23 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    before(app) {
+      app.get('/api/getRecommendList', function(req, res) {
+        var url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/',
+            // host: 'y.qq.com',
+            ['Sec-Fetch-Mode']: 'cors',
+            ['User-Agent']: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3800.0 Safari/537.36 Edg/76.0.172.0',
+            // Accept: 'application/json, text/javascript, */*; q=0.01'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(err => {console.log(err)})
+      })
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
