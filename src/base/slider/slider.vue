@@ -78,6 +78,7 @@ export default {
         scrollX: true,
         scroolY: false,
         momentum: false,
+        click: true,
         snap: {
           loop: this.loop, // 循环
           threshold: 0.3,
@@ -95,11 +96,14 @@ export default {
       })
     },
     _play () {
-      let pageIndex = this.currentPageIndex + 1
+      // let pageIndex = (this.currentPageIndex + 1) % (this.children.length - 2)
       this.timmer = setTimeout(() => {
-        this.slider.goToPage(pageIndex, 0, 400)
+        this.slider.next()
       }, this.interval)
     }
+  },
+  destroyed () {
+    clearTimeout(this.timmer)
   }
 }
 </script>
