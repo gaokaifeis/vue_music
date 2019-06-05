@@ -1,12 +1,12 @@
 <template>
   <div class="singer">
-
+    <list-view :list="singer"></list-view>
   </div>
 </template>
 
 <script type="text/javascript">
 import { getSinger } from 'api/singer'
-import { ERR_OK } from 'api/config'
+import ListView from 'base/listview/listview'
 export default {
   name: 'Singer',
   data () {
@@ -20,12 +20,12 @@ export default {
   methods: {
     _getSingerList () {
       getSinger().then(res => {
-        if (res.code === ERR_OK) {
-          const data = res.singerList.data
-          this.singer = data.singerList
-        }
+        this.singer = res
       })
     }
+  },
+  components: {
+    ListView
   }
 }
 </script>
