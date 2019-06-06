@@ -64,3 +64,31 @@ export const getSinger = async () => {
   //   return Promise.resolve(res.data)
   // })
 }
+
+export const getSingetDetail = async (id) => {
+  const url = '/api/getSingerDetail'
+  const data = Object.assign({}, commonParams, {
+    platform: 'yqq.json',
+    hostUin: 0,
+    loginUin: 0,
+    needNewCode: 0,
+    format: 'json',
+    data: {
+      'comm': {'ct': 24},
+      'singer': {
+        'method': 'get_singer_detail_info',
+        'param': {
+          'sort': 5,
+          'singermid': id,
+          'sin': 0,
+          'num': 10
+        },
+        'module': 'music.web_singer_info_svr'
+      }
+    }
+  })
+  const res = await axios.get(url, {
+    params: data
+  })
+  return Promise.resolve(res.data)
+}

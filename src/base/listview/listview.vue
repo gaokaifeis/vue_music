@@ -4,7 +4,7 @@
       <li v-for="group in list" :key="group.title" class="list-group" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
-          <li class="list-group-item" v-for="item in group.items" :key="item.singer_id">
+          <li @click="selectItem(item)" class="list-group-item" v-for="item in group.items" :key="item.singer_id">
             <img class="avatar" v-lazy="constructorImageUrl(item.singer_mid)" />
             <span class="name">{{item.singer_name}}</span>
           </li>
@@ -21,12 +21,17 @@
     <div ref="fixed" class="list-fixed" v-show="fixedTitle">
       <h1 class="fixed-title">{{fixedTitle}}</h1>
     </div>
+    <div v-show="!list.length" class="loading-container">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 
 <script>
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 import { getData } from 'common/js/dom'
+import { constructorImageUrl as cimageurl } from 'common/js/song'
 
 const ANCHOR_HEIGHT = 18
 const TITLEHEIGHT = 30
@@ -53,11 +58,12 @@ export default {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Loading
   },
   methods: {
     constructorImageUrl (id) {
-      return `https://y.gtimg.cn/music/photo_new/T001R150x150M000${id}.jpg?max_age=2592000`
+      return cimageurl(id)
     },
     onShortcutStart (e) {
       let anchorIndex = getData(e.target, 'index')
@@ -75,6 +81,9 @@ export default {
     },
     scrollE (pos) {
       this.scrollY = pos.y
+    },
+    selectItem (item) {
+      this.$emit('select', item)
     },
     _scrollTo (index) {
       this.$refs.listView.scrollToElement(this.$refs.listGroup[index], 0)
