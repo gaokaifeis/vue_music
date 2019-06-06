@@ -6,9 +6,15 @@
 import { mapGetters } from 'vuex'
 import { getSingetDetail } from 'api/singer'
 import { ERR_OK } from 'api/config'
+import Song from 'common/js/song'
 
 export default {
   name: 'SingerDetail',
+  data () {
+    return {
+      song: []
+    }
+  },
   created () {
     // console.log(this.singer)
     this._getSingerDetail()
@@ -20,9 +26,15 @@ export default {
         .then(res => {
           if (res.code === ERR_OK) {
             console.log(res)
-            // data = res.singer.data
+            data = res.singer.data
           }
         })
+    },
+    _normalizeSongs (list) {
+      let res = []
+      list.forEach(item => {
+        let 
+      })
     }
   },
   computed: {

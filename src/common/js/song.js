@@ -35,6 +35,6 @@ export const createSong = (musicdata) => {
     album: musicdata.album.name,
     duration: musicdata.interval,
     image: constructorImageUrl(musicdata.album.id),
-    url: musicdata.url
+    url: `http://dl.stream.qqmusic.qq.com/${musicdata.album.id}.m4a?fromtag=66`
   })
 }
