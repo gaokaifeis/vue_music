@@ -1,9 +1,10 @@
 <template>
-  <div class="singer-detail"></div>
+  <music-list></music-list>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import MusicList from 'components/music-list/music-list'
 import { getSingetDetail, getMusicDeTail } from 'api/singer'
 import { ERR_OK } from 'api/config'
 import { createSong } from 'common/js/song'
@@ -48,6 +49,9 @@ export default {
     ...mapGetters([
       'singer'
     ])
+  },
+  components: {
+    MusicList
   }
 }
 </script>
