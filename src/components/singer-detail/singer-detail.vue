@@ -4,15 +4,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getSingetDetail } from 'api/singer'
+import { getSingetDetail, getMusicDeTail } from 'api/singer'
 import { ERR_OK } from 'api/config'
-import Song from 'common/js/song'
+import { createSong } from 'common/js/song'
 
 export default {
   name: 'SingerDetail',
   data () {
     return {
-      song: []
+      songs: []
     }
   },
   created () {
@@ -25,16 +25,23 @@ export default {
       getSingetDetail(query)
         .then(res => {
           if (res.code === ERR_OK) {
-            console.log(res)
-            data = res.singer.data
+            const data = res.singer.data
+            this.songs = this._normalizeSongs(data.songlist)
           }
         })
     },
-    _normalizeSongs (list) {
+    async _normalizeSongs (list) {
       let res = []
-      list.forEach(item => {
-        let 
-      })
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i]
+        let response = await getMusicDeTail(item.mid)
+        if (response.req_0.code === ERR_OK) {
+          const purl = response.req_0.data.midurlinfo[0].purl
+          // console.log(createSong(item, purl))
+          res.push(createSong(item, purl))
+        }
+      }
+      return res
     }
   },
   computed: {

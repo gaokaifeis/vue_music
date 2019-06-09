@@ -9,10 +9,6 @@ const filterSinger = (list) => {
   return ret.join('/')
 }
 
-export const constructorImageUrl = (id) => {
-  return `https://y.gtimg.cn/music/photo_new/T001R150x150M000${id}.jpg?max_age=2592000`
-}
-
 export default class Song {
   constructor ({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
@@ -26,7 +22,7 @@ export default class Song {
   }
 }
 
-export const createSong = (musicdata) => {
+export const createSong = (musicdata, purl) => {
   return new Song({
     id: musicdata.id,
     mid: musicdata.mid,
@@ -34,7 +30,7 @@ export const createSong = (musicdata) => {
     name: musicdata.name,
     album: musicdata.album.name,
     duration: musicdata.interval,
-    image: constructorImageUrl(musicdata.album.id),
-    url: `http://dl.stream.qqmusic.qq.com/${musicdata.album.id}.m4a?fromtag=66`
+    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicdata.album.mid}.jpg?max_age=2592000`,
+    url: `http://dl.stream.qqmusic.qq.com/${purl}`
   })
 }

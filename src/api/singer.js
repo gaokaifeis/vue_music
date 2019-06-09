@@ -65,6 +65,44 @@ export const getSinger = async () => {
   // })
 }
 
+export const getMusicDeTail = async (id) => {
+  const url = '/api/getMusicDetail'
+  const data = Object.assign({}, commonParams, {
+    '-': 'getplaysongvkey3146125316989403',
+    platform: 'yqq.json',
+    g_tk: '448150391',
+    hostUin: 0,
+    loginUin: '1148117077',
+    needNewCode: 0,
+    inCharset: 'utf8',
+    format: 'json',
+    data: {
+      'req_0': {
+        'module': 'vkey.GetVkeyServer',
+        'method': 'CgiGetVkey',
+        'param': {
+          'guid': '4259115448',
+          'songmid': [id],
+          'uin': '1148117077',
+          'songtype': [0],
+          'loginflag': 1,
+          'platform': '20'
+        }
+      },
+      'comm': {
+        'uid': 1148117077,
+        'format': 'json',
+        'ct': 24,
+        'cv': 0
+      }
+    }
+  })
+  const res = await axios.get(url, {
+    params: data
+  })
+  return Promise.resolve(res.data)
+}
+
 export const getSingetDetail = async (id) => {
   const url = '/api/getSingerDetail'
   const data = Object.assign({}, commonParams, {

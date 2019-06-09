@@ -31,7 +31,6 @@
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import { getData } from 'common/js/dom'
-import { constructorImageUrl as cimageurl } from 'common/js/song'
 
 const ANCHOR_HEIGHT = 18
 const TITLEHEIGHT = 30
@@ -63,7 +62,7 @@ export default {
   },
   methods: {
     constructorImageUrl (id) {
-      return cimageurl(id)
+      return `https://y.gtimg.cn/music/photo_new/T001R150x150M000${id}.jpg?max_age=2592000`
     },
     onShortcutStart (e) {
       let anchorIndex = getData(e.target, 'index')
