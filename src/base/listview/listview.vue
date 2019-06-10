@@ -5,7 +5,7 @@
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li @click="selectItem(item)" class="list-group-item" v-for="item in group.items" :key="item.singer_id">
-            <img class="avatar" v-lazy="constructorImageUrl(item.singer_mid)" />
+            <img class="avatar" v-lazy="item.avatar" />
             <span class="name">{{item.singer_name}}</span>
           </li>
         </ul>
@@ -61,9 +61,6 @@ export default {
     Loading
   },
   methods: {
-    constructorImageUrl (id) {
-      return `https://y.gtimg.cn/music/photo_new/T001R150x150M000${id}.jpg?max_age=2592000`
-    },
     onShortcutStart (e) {
       let anchorIndex = getData(e.target, 'index')
       let firstToch = e.touches[0]

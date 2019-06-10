@@ -1,5 +1,5 @@
 <template>
-  <music-list></music-list>
+  <music-list :songs="songs" :title="title" :bg-image="bgImage"></music-list>
 </template>
 
 <script>
@@ -17,17 +17,19 @@ export default {
     }
   },
   created () {
-    // console.log(this.singer)
     this._getSingerDetail()
   },
   methods: {
     _getSingerDetail () {
-      let query = !this.singer.singer_mid ? this.$router.currentRoute.params.id : this.singer.singer_mid
-      getSingetDetail(query)
+      if (!this.singer.singer_mid) {
+        this.$router.push('/singer')
+      }
+      // let query = !this.singer.singer_mid ? this.$router.currentRoute.params.id : this.singer.singer_mid
+      getSingetDetail(this.singer.singer_mid)
         .then(res => {
           if (res.code === ERR_OK) {
             const data = res.singer.data
-            this.songs = this._normalizeSongs(data.songlist)
+            this._normalizeSongs(data.songlist)
           }
         })
     },
@@ -42,10 +44,16 @@ export default {
           res.push(createSong(item, purl))
         }
       }
-      return res
+      this.songs = res
     }
   },
   computed: {
+    title () {
+      return this.singer.singer_name
+    },
+    bgImage () {
+      return this.singer.avatar
+    },
     ...mapGetters([
       'singer'
     ])

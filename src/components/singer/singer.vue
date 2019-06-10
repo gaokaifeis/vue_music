@@ -11,6 +11,7 @@
 import { getSinger } from 'api/singer'
 import ListView from 'base/listview/listview'
 import { mapMutations } from 'vuex'
+// import Singer from 'common/js/singer'
 
 export default {
   name: 'Singer',
@@ -31,8 +32,21 @@ export default {
     },
     _getSingerList () {
       getSinger().then(res => {
+        console.log(this._normalizeSongs(res))
         this.singer = res
       })
+    },
+    _normalizeSongs (list) {
+      const res = list.map(tilteItem => {
+        return {
+          title: tilteItem.title,
+          items: tilteItem.items.map(singer => {
+            singer.avatar = `https://y.gtimg.cn/music/photo_new/T001R150x150M000${singer.singer_mid}.jpg?max_age=2592000`
+            return singer
+          })
+        }
+      })
+      return res
     },
     ...mapMutations({
       setSinger: 'SET_SINGER'
