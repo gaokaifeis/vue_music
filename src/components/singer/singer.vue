@@ -32,8 +32,8 @@ export default {
     },
     _getSingerList () {
       getSinger().then(res => {
-        console.log(this._normalizeSongs(res))
-        this.singer = res
+        // console.log(this._normalizeSongs(res))
+        this.singer = this._normalizeSongs(res)
       })
     },
     _normalizeSongs (list) {
