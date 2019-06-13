@@ -22,6 +22,13 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+            </div>
+            <span class="time time-r">{{format(currentSong.duration - currentTime)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
@@ -59,7 +66,7 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+    <audio ref="audio" @timeupdate="updateTime" :src="currentSong.url" @canplay="ready" @error="error"></audio>
   </div>
 </template>
 
@@ -67,6 +74,7 @@
 import animations from 'create-keyframe-animation'
 import { mapGetters, mapMutations } from 'vuex'
 import { prefixStyle } from 'common/js/dom'
+import ProgressBar from 'base/progress-bar/progress-bar'
 
 const transform = prefixStyle('transform')
 
@@ -74,10 +82,14 @@ export default {
   name: 'Player',
   data () {
     return {
-      songReady: false
+      songReady: false,
+      currentTime: 0
     }
   },
   computed: {
+    percent () {
+      return this.currentTime / this.currentSong.duration
+    },
     playIcon () {
       return this.playing ? 'icon-pause' : 'icon-play'
     },
@@ -99,6 +111,15 @@ export default {
     ])
   },
   methods: {
+    onProgressBarChange (percent) {
+      this.$refs.audio.currentTime = percent * this.currentSong.duration
+      if (!this.playing) {
+        this.togelPlaying()
+      }
+    },
+    updateTime (e) {
+      this.currentTime = e.target.currentTime
+    },
     error () {
       this.songReady = true
     },
@@ -176,6 +197,15 @@ export default {
       this.$refs.cdWrapper.style.transition = ''
       this.$refs.cdWrapper.style[transform] = ''
     },
+    _pad (num, n = 2) {
+      return num.toString().padStart(n, '0')
+    },
+    format (interval) {
+      interval = interval | 0
+      const minute = interval / 60 | 0
+      const second = interval % 60
+      return `${minute}:${this._pad(second)}`
+    },
     _getPosAndScale () {
       const targetWidth = 40
       const paddingLeft = 40
@@ -212,6 +242,9 @@ export default {
         newPlaying ? audio.play() : audio.pause()
       })
     }
+  },
+  components: {
+    ProgressBar
   }
 }
 </script>
