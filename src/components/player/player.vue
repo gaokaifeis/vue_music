@@ -368,6 +368,8 @@ export default {
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
+          // 这里歌词可能有问题，可以初始化时校正一下歌词
+          this.currentLyric.seek(this.$refs.audio.currentTime * 1000)
         }
       }).catch(() => {
         this.currentLyric = null

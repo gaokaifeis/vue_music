@@ -94,6 +94,9 @@ export default {
         height += item.clientHeight
         this.listHeight.push(height)
       }
+    },
+    refresh () {
+      this.$refs.listView.refresh()
     }
   },
   computed: {
