@@ -94,6 +94,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }).catch(err => {console.log(err)})
       })
 
+      app.get('/api/getLyrics', function(req, res) {
+        var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/portal/player.html',
+            // host: 'y.qq.com',
+            // origin: 'https://y.qq.com',
+            ['User-Agent']: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3800.0 Safari/537.36 Edg/76.0.172.0',
+            // Accept: 'application/json, text/javascript, */*; q=0.01'
+          },
+          params: req.query
+        }).then(response => {
+          res.json(response.data)
+        }).catch(err => {console.log(err)})
+      })
+
     },
     clientLogLevel: 'warning',
     historyApiFallback: {
