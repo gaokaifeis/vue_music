@@ -50,7 +50,7 @@ export default {
     },
     songs: {
       type: Array,
-      default: null
+      default: () => ([])
     },
     title: {
       type: String,

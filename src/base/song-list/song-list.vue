@@ -17,7 +17,7 @@ export default {
   props: {
     songs: {
       type: Array,
-      default: null
+      default: () => ([])
     }
   },
   methods: {

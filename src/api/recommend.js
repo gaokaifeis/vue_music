@@ -29,3 +29,29 @@ export const getRecommend = () => {
     return Promise.resolve(res.data)
   })
 }
+
+export const getSongList = (disstid) => {
+  const url = '/api/getDisc'
+
+  const data = Object.assign({}, commonParams, {
+    platform: 'yqq.json',
+    hostUin: 0,
+    loginUin: 0,
+    needNewCode: 0,
+    format: 'json',
+    disstid: disstid,
+    inCharset: 'utf8',
+    type: 1,
+    json: 1,
+    utf8: 1,
+    onlysong: 0,
+    new_format: 1,
+    g_tk: 448150391
+  })
+
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
