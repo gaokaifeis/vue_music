@@ -12,3 +12,7 @@ export const shuffle = (arr) => {
   }
   return _arr
 }
+
+export const customFormatPadStart = (num, padLen, padCode) => {
+  return num.toString().padStart(padLen, padCode)
+}
