@@ -2,7 +2,7 @@ import { getLyric } from 'api/Lyrics'
 import { ERR_OK } from 'api/config'
 import { Base64 } from 'js-base64'
 
-const filterSinger = (list) => {
+export const filterSinger = (list) => {
   const ret = []
   if (!list) {
     return ''
