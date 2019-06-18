@@ -1,5 +1,5 @@
 <template>
-  <div class="suggest">
+  <scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest">
     <ul class="suggest-list">
       <li class="suggest-item" :key="index" v-for="(item, index) in result">
         <div class="icon">
@@ -9,21 +9,29 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
-  </div>
+  </scroll>
 </template>
 
 <script>
 import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
-import { filterSinger } from 'common/js/song'
+import { createSongForSearch } from 'common/js/song'
+import { getMusicDeTail } from 'api/singer'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
+
 const TYPE_SINGER = 'singer'
+const perpage = 20
 export default {
   name: 'Suggest',
   data () {
     return {
       page: 1,
-      result: []
+      result: [],
+      pullup: true,
+      hasMore: true
     }
   },
   props: {
@@ -38,19 +46,27 @@ export default {
   },
   watch: {
     query () {
-      console.log('a')
       this.search()
     }
   },
   methods: {
     search () {
-      search(this.query, this.page, this.showSinger)
+      this.page = 1
+      this.hasMore = true
+      this.$refs.suggest.scrollTo(0, 0)
+      search(this.query, this.page, this.showSinger, perpage)
         .then(res => {
           if (res.code === ERR_OK) {
-            console.log(this)
-            this.result = this._genResult(res.data)
+            this._genResult(res.data)
+            this._checkMore(res.data)
           }
         })
+    },
+    _checkMore (data) {
+      const song = data.song
+      if (!song.list.length || (song.curnum + song.curpage * perpage) > song.totalnum) {
+        this.hasMore = false
+      }
     },
     _genResult (data) {
       let ret = []
@@ -58,9 +74,25 @@ export default {
         ret.push({...data.zhida, ...{type: TYPE_SINGER}})
       }
       if (data.song) {
-        ret = ret.concat(data.song.list)
+        // ret = ret.concat(data.song.list)
+        this._normalizeSongs(data.song.list).then(res => {
+          const result = this.result
+          result.concat([...ret, ...res])
+          this.result = this.result.concat([...ret, ...res])
+        })
       }
-      return ret
+    },
+    async _normalizeSongs (list) {
+      let res = []
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i]
+        let response = await getMusicDeTail(item.songmid)
+        if (response.req_0.code === ERR_OK) {
+          const purl = response.req_0.data.midurlinfo[0].purl
+          res.push(createSongForSearch(item, purl))
+        }
+      }
+      return res
     },
     getIconCls (item) {
       if (item.type === TYPE_SINGER) {
@@ -73,9 +105,27 @@ export default {
       if (item.type === TYPE_SINGER) {
         return item.singername
       } else {
-        return `${item.songname}-${filterSinger(item.singer)}`
+        return `${item.name}-${item.singer}`
       }
+    },
+    searchMore () {
+      console.log('haha')
+      if (!this.hasMore) {
+        return
+      }
+      this.page++
+      search(this.query, this.page, this.showSinger, perpage)
+        .then(res => {
+          if (res.code === ERR_OK) {
+            this._genResult(res.data)
+            this._checkMore(res.data)
+          }
+        })
     }
+  },
+  components: {
+    Scroll,
+    Loading
   }
 }
 </script>

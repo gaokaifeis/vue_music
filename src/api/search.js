@@ -16,7 +16,7 @@ export const getHotKey = () => {
   })
 }
 
-export const search = (query, page, zhida) => {
+export const search = (query, page, zhida, perpage) => {
   const url = '/api/search'
   const data = Object.assign({}, commonParams, {
     platform: 'h5',
@@ -28,8 +28,8 @@ export const search = (query, page, zhida) => {
     ie: 'utf-8',
     sem: 1,
     aggr: 0,
-    perpage: 20,
-    n: 20,
+    perpage: perpage,
+    n: perpage,
     zhidaqu: 1,
     remoteplace: 'txt.mqq.all',
     w: query,

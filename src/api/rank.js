@@ -27,7 +27,7 @@ let formatWeek2 = () => {
   startDate.setDate(1)
   startDate.setMonth(0)
   startDate.setDate(startDate.getDate() + (week - startDate.getDay() + 1) % week)
-  currentdate.setDate(currentdate.getDate() - (startDate.getDay() + week - 1) % week)
+  currentdate.setDate(currentdate.getDate() - (currentdate.getDay() + week - 1) % week)
   return (currentdate - startDate) / 3600 / 24 / 7 / 1000
 }
 

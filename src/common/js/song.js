@@ -54,3 +54,16 @@ export const createSong = (musicdata, purl) => {
     url: `http://dl.stream.qqmusic.qq.com/${purl}`
   })
 }
+
+export const createSongForSearch = (musicdata, purl) => {
+  return new Song({
+    id: musicdata.songid,
+    mid: musicdata.songmid,
+    singer: filterSinger(musicdata.singer),
+    name: musicdata.songname,
+    album: musicdata.albumname,
+    duration: musicdata.interval,
+    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicdata.albummid}.jpg?max_age=2592000`,
+    url: `http://dl.stream.qqmusic.qq.com/${purl}`
+  })
+}
