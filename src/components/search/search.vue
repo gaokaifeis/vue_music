@@ -18,6 +18,9 @@
     <div class="search-result" v-show="query">
       <suggest :query="query"></suggest>
     </div>
+    <transition name="slide">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -111,4 +114,8 @@ export default {
       width: 100%
       top: 178px
       bottom: 0
+  .slide-enter-active, .slide-leave-active
+    transition: all 0.3s
+  .slide-enter, .slide-leave-to
+    transform: translate3d(100%, 0, 0)
 </style>

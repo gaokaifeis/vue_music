@@ -1,7 +1,7 @@
 <template>
   <scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest">
     <ul class="suggest-list">
-      <li class="suggest-item" :key="index" v-for="(item, index) in result">
+      <li @click="selectItem(item)" class="suggest-item" :key="index" v-for="(item, index) in result">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -11,16 +11,21 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+      <no-result title="抱歉，暂无搜索结果"></no-result>
+    </div>
   </scroll>
 </template>
 
 <script>
+import { mapMutations, mapActions } from 'vuex'
 import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
 import { createSongForSearch } from 'common/js/song'
 import { getMusicDeTail } from 'api/singer'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
+import NoResult from 'base/no-result/no-result'
 
 const TYPE_SINGER = 'singer'
 const perpage = 20
@@ -53,6 +58,7 @@ export default {
     search () {
       this.page = 1
       this.hasMore = true
+      this.result = []
       this.$refs.suggest.scrollTo(0, 0)
       search(this.query, this.page, this.showSinger, perpage)
         .then(res => {
@@ -109,7 +115,6 @@ export default {
       }
     },
     searchMore () {
-      console.log('haha')
       if (!this.hasMore) {
         return
       }
@@ -121,11 +126,34 @@ export default {
             this._checkMore(res.data)
           }
         })
-    }
+    },
+    selectItem (item) {
+      if (item.type === TYPE_SINGER) {
+        const singer = {
+          singer_id: item.singerid,
+          singer_mid: item.singermid,
+          singer_name: item.singername,
+          avatar: `https://y.gtimg.cn/music/photo_new/T001R150x150M000${item.singermid}.jpg?max_age=2592000`
+        }
+        this.$router.push({
+          path: `/search/${singer.singer_mid}`
+        })
+        this.setSinger(singer)
+      } else {
+        this.insertSong(item)
+      }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   },
   components: {
     Scroll,
-    Loading
+    Loading,
+    NoResult
   }
 }
 </script>
