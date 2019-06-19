@@ -16,3 +16,15 @@ export const shuffle = (arr) => {
 export const customFormatPadStart = (num, padLen, padCode) => {
   return num.toString().padStart(padLen, padCode)
 }
+
+export const debounce = (func, dealy) => {
+  let timer
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, dealy)
+  }
+}
